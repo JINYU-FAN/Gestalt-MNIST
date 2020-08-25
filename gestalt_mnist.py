@@ -23,7 +23,7 @@ class Gestalt_MNIST_dataset(MNIST):
 
 if __name__ == '__main__':
     test_loader = torch.utils.data.DataLoader(
-        Gestalt_MNIST_dataset('./MNIST/illusory_complex/', transform=transforms.Compose([transforms.ToTensor(),])),batch_size=5, shuffle=True)
+        Gestalt_MNIST_dataset('./MNIST/half/', transform=transforms.Compose([transforms.ToTensor(),])),batch_size=5, shuffle=True)
     for image, label in test_loader:
         print(image[0][0])
         plt.imshow(image[0][0])
