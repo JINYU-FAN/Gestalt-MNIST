@@ -8,7 +8,7 @@ def reverse(img):
 
 def half(img):
     size = img.shape[-1]
-    mask = torch.zeros(size, size).to(DEVICE)
+    mask = torch.zeros(size, size)
     for i in range(size):
         for j in range(size):
             if i>=size//2:
@@ -17,7 +17,7 @@ def half(img):
 
 def quarter(img):
     size = img.shape[-1]
-    mask = torch.zeros(size, size).to(DEVICE)
+    mask = torch.zeros(size, size)
     for i in range(size):
         for j in range(size):
             if (i>=size//2 and j>=size//2) or (i<size//2 and j<size//2):
@@ -26,7 +26,7 @@ def quarter(img):
 
 def continuity(img, n):
     size = img.shape[-1]
-    mask = torch.zeros(size, size).to(DEVICE)
+    mask = torch.zeros(size, size)
     for i in range(size):
         for j in range(size):
             if i % n == 0:
@@ -35,7 +35,7 @@ def continuity(img, n):
 
 def closure(img, n):
     size = img.shape[-1]
-    mask = torch.ones(size, size).to(DEVICE)
+    mask = torch.ones(size, size)
     for i in range(size):
         for j in range(size):
             if i % n == 0:
@@ -44,7 +44,7 @@ def closure(img, n):
 
 def illusory(img, n):
     size = img.shape[-1]
-    mask = torch.zeros(size, size).to(DEVICE)
+    mask = torch.zeros(size, size)
     for i in range(size):
         for j in range(size):
             if i%n == 0:
@@ -53,8 +53,8 @@ def illusory(img, n):
 
 def illusory_complex(img, m, n):
     size = img.shape[-1]
-    mask1 = torch.zeros(size, size).to(DEVICE)
-    mask2 = torch.zeros(size, size).to(DEVICE)
+    mask1 = torch.zeros(size, size)
+    mask2 = torch.zeros(size, size)
     img_mask = (img > 0).int()
     for i in range(size):
         for j in range(size):
@@ -74,12 +74,15 @@ def illusory_complex(img, m, n):
 
 
 if __name__ == '__main__':
-    original_data = torch.load('./MNIST/original/test.pt')
-    print(original_data[0][0])
-    new_data = (half(original_data[0]), original_data[1])
-    print(new_data[0][0])
-    plt.imshow(new_data[0][0])
-    plt.show()
-    torch.save(new_data, './MNIST/half/test.pt')
+    def save(data, path):
+        dir_path = './Fashion-MNIST/'+path
+        if not os.path.exists(dir_path):
+            os.mkdir(dir_path)
+            torch.save(data, dir_path+'/test.pt')
+    original_data = torch.load('./FashionMNIST/original/test.pt')
+    new_data = (illusory(original_data[0], 2), original_data[1])
+    save(new_data, 'illusory2')
+
+    
 
 
