@@ -37,8 +37,10 @@ class GestaltFashionMNIST(FashionMNIST):
 
 if __name__ == '__main__':
     test_loader = torch.utils.data.DataLoader(
-        GestaltFashionMNIST('./FashionMNIST/original/', transform=transforms.Compose([transforms.ToTensor(),])),batch_size=5, shuffle=True)
+        GestaltMNIST('./FashionMNIST/illusory_complex_5_2/', transform=transforms.Compose([transforms.ToTensor(),])),batch_size=5, shuffle=True)
     for image, label in test_loader:
-        print(label[0])
+        classes = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal',
+                'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+        print(classes[label[0].int()])
         plt.imshow(image[0][0])
         plt.show()

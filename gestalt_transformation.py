@@ -75,13 +75,13 @@ def illusory_complex(img, m, n):
 
 if __name__ == '__main__':
     def save(data, path):
-        dir_path = './Fashion-MNIST/'+path
+        dir_path = './FashionMNIST/'+path
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
             torch.save(data, dir_path+'/test.pt')
     original_data = torch.load('./FashionMNIST/original/test.pt')
-    new_data = (illusory(original_data[0], 2), original_data[1])
-    save(new_data, 'illusory2')
+    new_data = (illusory_complex(original_data[0], 2, 5), original_data[1])
+    save(new_data, 'illusory_complex_2_5')
 
     
 
