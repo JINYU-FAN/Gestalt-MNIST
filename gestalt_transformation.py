@@ -1,6 +1,7 @@
 import torch
 from matplotlib import pyplot as plt
 import os
+import cv2
 dtype = torch.uint8
 
 def reverse(img):
@@ -75,7 +76,7 @@ def edge(imgs, w):
         img_dilate=cv2.dilate(img.numpy(),g)
         edge=img_dilate-img.numpy()
         edges[i] = torch.Tensor(edge)
-    return edges
+    return edges.to(dtype)
 
 
 def illusory_edge(img, m, n, w):
@@ -90,20 +91,30 @@ def illusory_edge(img, m, n, w):
                 mask1[i][j] = 255
             if j%n == 1:
                 mask2[i][j] = 255
-    return (edges==0).int()*(img_mask * mask1 + (1-img_mask) * mask2).clamp(0,255).to(dtype)
+    return ((edges==0).int()*(img_mask * mask1 + (1-img_mask) * mask2).clamp(0,255)).to(dtype)
 
 
-
+def proximity(img, w):
+    mask = torch.zeros(28, 28)
+    for i in range(28):
+        for j in range(28):
+            if i%2==0 and j%2==0:
+                mask[i][j] = 255
+    edges = edge(img, w)
+    return ((edges==0).int()*mask).to(dtype)
 
 if __name__ == '__main__':
-    def save(data, path):
-        dir_path = './FashionMNIST/'+path
-        if not os.path.exists(dir_path):
-            os.mkdir(dir_path)
-            torch.save(data, dir_path+'/test.pt')
-    original_data = torch.load('./FashionMNIST/original/test.pt')
-    new_data = (illusory_complex(original_data[0], 2, 5), original_data[1])
-    save(new_data, 'illusory_complex_2_5')
+    dataset = 'MNIST'
+    for i in [1,2,3,4,5,6,7]:
+        def save(data, path):
+            dir_path = f'./{dataset}/'+path
+            if not os.path.exists(dir_path):
+                os.mkdir(dir_path)
+                torch.save(data, dir_path+'/test.pt')
+        original_data = torch.load(f'./{dataset}/original/test.pt')
+
+        new_data = (illusory_edge(original_data[0], 2,2,i), original_data[1])
+        save(new_data, f'illusory_edge_22{i}')
 
     
 
