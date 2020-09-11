@@ -78,7 +78,19 @@ def edge(imgs, w):
     return edges
 
 
-
+def illusory_edge(img, m, n, w):
+    edges = edge(img, w)
+    size = img.shape[-1]
+    mask1 = torch.zeros(size, size)
+    mask2 = torch.zeros(size, size)
+    img_mask = (img > 0).int()
+    for i in range(size):
+        for j in range(size):
+            if i%m == 0:
+                mask1[i][j] = 255
+            if j%n == 1:
+                mask2[i][j] = 255
+    return (edges==0).int()*(img_mask * mask1 + (1-img_mask) * mask2).clamp(0,255).to(dtype)
 
 
 
