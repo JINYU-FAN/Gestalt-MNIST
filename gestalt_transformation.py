@@ -61,7 +61,7 @@ def illusory_complex(img, m, n):
         for j in range(size):
             if i%m == 0:
                 mask1[i][j] = 255
-            if j%n == 1:
+            if j%n == 0:
                 mask2[i][j] = 255
     return (img_mask * mask1 + (1-img_mask) * mask2).clamp(0,255).to(dtype)
 
@@ -104,17 +104,16 @@ def proximity(img, w):
     return ((edges==0).int()*mask).to(dtype)
 
 if __name__ == '__main__':
-    dataset = 'MNIST'
-    for i in [1,2,3,4,5,6,7]:
-        def save(data, path):
-            dir_path = f'./{dataset}/'+path
-            if not os.path.exists(dir_path):
-                os.mkdir(dir_path)
-                torch.save(data, dir_path+'/test.pt')
-        original_data = torch.load(f'./{dataset}/original/test.pt')
+    dataset = 'FashionMNIST'
+    def save(data, path):
+        dir_path = f'./{dataset}/'+path
+        if not os.path.exists(dir_path):
+            os.mkdir(dir_path)
+            torch.save(data, dir_path+'/test.pt')
+    original_data = torch.load(f'./{dataset}/original/test.pt')
 
-        new_data = (illusory_edge(original_data[0], 2,2,i), original_data[1])
-        save(new_data, f'illusory_edge_22{i}')
+    new_data = (illusory_complex(original_data[0], 2,2), original_data[1])
+    save(new_data, 'illusory_complex_2_2_r')
 
     
 
