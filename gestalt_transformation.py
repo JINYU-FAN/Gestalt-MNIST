@@ -2,6 +2,7 @@ import torch
 from matplotlib import pyplot as plt
 import os
 import cv2
+import random
 dtype = torch.uint8
 
 def reverse(img):
@@ -103,6 +104,16 @@ def proximity(img, w):
     edges = edge(img, w)
     return ((edges==0).int()*mask).to(dtype)
 
+
+def noise(imgs, n):
+    for a in range(len(imgs)):
+        for i in range(28):
+            for j in range(28):
+                if random.random() < 0.5:
+                    imgs[a][i][j] = n
+    return imgs
+
+
 if __name__ == '__main__':
     dataset = 'FashionMNIST'
     def save(data, path):
@@ -112,8 +123,8 @@ if __name__ == '__main__':
             torch.save(data, dir_path+'/test.pt')
     original_data = torch.load(f'./{dataset}/original/test.pt')
 
-    new_data = (illusory_complex(original_data[0], 2,2), original_data[1])
-    save(new_data, 'illusory_complex_2_2_r')
+    new_data = (noise(original_data[0], 0), original_data[1])
+    save(new_data, 'noise0')
 
     
 
